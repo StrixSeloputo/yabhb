@@ -71,8 +71,10 @@ def main():
                 full_outgoing += pur_sum + pur_full_tax
                 avg_purchase_rate = full_outgoing / pur_rate
 
-            except BaseException:
-                print('Something does wrong. Try again')
+            except TypeError as er:
+                print('Something goes wrong in parsing ('+er.__str__()+'). Try again')
+            except ValueError as er:
+                print(er)
 
             print(purchases)
             bot.send_message(
