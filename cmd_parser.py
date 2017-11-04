@@ -17,7 +17,10 @@ class BotRegex:
     def get_sum(self, string):
         searched = re.search(self.sum_cmd_pat, string)
 
-        if searched.group(1) is None or searched.group(2) is None:
+        if (searched is None) or \
+                (searched.group(0) is None) or \
+                (searched.group(1) is None) or \
+                (searched.group(2) is None):
             raise ValueError('The sum was not recognised')
 
         return float(searched.group(2))
@@ -26,7 +29,11 @@ class BotRegex:
         pattern = self.bank_cmd_pat + '_' + self.tax_cmd_pat
         searched = re.search(pattern, string)
 
-        if searched.group(1) is None or searched.group(2) is None or searched.group(3) is None:
+        if (searched is None) or \
+                (searched.group(0) is None) or \
+                (searched.group(1) is None) or \
+                (searched.group(2) is None) or \
+                (searched.group(3) is None):
             return 0.
 
         return float(searched.group(3))
@@ -35,7 +42,11 @@ class BotRegex:
         pattern = self.bot_cmd_pat + '_' + self.tax_cmd_pat
         searched = re.search(pattern, string)
 
-        if searched.group(1) is None or searched.group(2) is None or searched.group(3) is None:
+        if (searched is None) or\
+                (searched.group(0) is None) or \
+                (searched.group(1) is None) or \
+                (searched.group(2) is None) or \
+                (searched.group(3) is None):
             return 0.
 
         return float(searched.group(3))
@@ -43,7 +54,10 @@ class BotRegex:
     def get_rate(self, string):
         searched = re.search(self.rate_cmd_pat, string)
 
-        if searched.group(1) is None or searched.group(2) is None:
+        if (searched is None) or \
+                (searched.group(0) is None) or \
+                (searched.group(1) is None) or \
+                (searched.group(2) is None):
             return 1.
 
         return float(searched.group(2))
