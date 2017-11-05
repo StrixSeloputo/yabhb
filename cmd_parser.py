@@ -1,8 +1,14 @@
 import re
 
 
+def was_recognized(searched, group_index):
+    return (searched is not None) and \
+            (searched.group(group_index) is not None)
+
+
 class BotRegex:
     purchase_cmd_pat = '(purchase|buying|buy|bought|купить|куплено|покупать|к)'
+    selling_cmd_pat = '(sale|selling|sell|sold|продавать|продать|продано|п)'
     double_pat = '(\d+([,\.]\d*)?)'
     sum_cmd_pat = '(sum|s|сумма|с)\s+' + double_pat
     bank_cmd_pat = '(bank|банк)'
@@ -14,13 +20,14 @@ class BotRegex:
         matched = re.match(self.purchase_cmd_pat, string)
         return matched is not None
 
+    def is_starts_from_selling_cmd(self, string):
+        matched = re.match(self.selling_cmd_pat, string)
+        return matched is not None
+
     def get_sum(self, string):
         searched = re.search(self.sum_cmd_pat, string)
 
-        if (searched is None) or \
-                (searched.group(0) is None) or \
-                (searched.group(1) is None) or \
-                (searched.group(2) is None):
+        if not was_recognized(searched, 2):
             raise ValueError('The sum was not recognised')
 
         return float(searched.group(2))
@@ -29,24 +36,16 @@ class BotRegex:
         pattern = self.bank_cmd_pat + '_' + self.tax_cmd_pat
         searched = re.search(pattern, string)
 
-        if (searched is None) or \
-                (searched.group(0) is None) or \
-                (searched.group(1) is None) or \
-                (searched.group(2) is None) or \
-                (searched.group(3) is None):
+        if not was_recognized(searched, 3):
             return 0.
 
         return float(searched.group(3))
 
-    def get_bot_tax(self, string):
+    def get_service_tax(self, string):
         pattern = self.bot_cmd_pat + '_' + self.tax_cmd_pat
         searched = re.search(pattern, string)
 
-        if (searched is None) or\
-                (searched.group(0) is None) or \
-                (searched.group(1) is None) or \
-                (searched.group(2) is None) or \
-                (searched.group(3) is None):
+        if not was_recognized(searched, 3):
             return 0.
 
         return float(searched.group(3))
@@ -54,10 +53,7 @@ class BotRegex:
     def get_rate(self, string):
         searched = re.search(self.rate_cmd_pat, string)
 
-        if (searched is None) or \
-                (searched.group(0) is None) or \
-                (searched.group(1) is None) or \
-                (searched.group(2) is None):
+        if not was_recognized(searched, 2):
             return 1.
 
         return float(searched.group(2))

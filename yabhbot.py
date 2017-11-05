@@ -63,7 +63,7 @@ def main():
             try:
                 pur_sum = bot_regex.get_sum(last_chat_text)
                 pur_bank_tax = bot_regex.get_bank_tax(last_chat_text)
-                pur_serv_tax = bot_regex.get_bot_tax(last_chat_text)
+                pur_serv_tax = bot_regex.get_service_tax(last_chat_text)
                 pur_rate = bot_regex.get_rate(last_chat_text)
 
                 wallet = bot.get_wallet(last_chat_id)
@@ -73,13 +73,31 @@ def main():
                     last_chat_id,
                     wallet.__str__()
                 )
-
             except TypeError as er:
                 print('Something goes wrong in parsing ('+er.__str__()+'). Try again')
             except ValueError as er:
                 print(er)
-            new_offset = last_update_id + 1
-            # break
+
+        if bot_regex.is_starts_from_selling_cmd(last_chat_text):
+            try:
+                sell_sum = bot_regex.get_sum(last_chat_text)
+                # pur_bank_tax = bot_regex.get_bank_tax(last_chat_text)
+                sell_serv_tax = bot_regex.get_service_tax(last_chat_text)
+                sell_rate = bot_regex.get_rate(last_chat_text)
+
+                wallet = bot.get_wallet(last_chat_id)
+                wallet.selling(sell_sum, sell_serv_tax, sell_rate)
+
+                bot.send_message(
+                    last_chat_id,
+                    wallet.__str__()
+                )
+            except TypeError as er:
+                print('Something goes wrong in parsing ('+er.__str__()+'). Try again')
+            except ValueError as er:
+                print(er)
+
+        new_offset = last_update_id + 1
 
 
 if __name__ == '__main__':
